@@ -1,0 +1,12 @@
+# depslib dependency file v1.0
+1585143307 source:c:\xampp\htdocs\c-cplusplus\c++\bigint\main.cpp
+	<iostream>
+	"src/BigInt.h"
+
+1585143943 c:\xampp\htdocs\c-cplusplus\c++\bigint\src\bigint.h
+	<iostream>
+
+1585144506 source:c:\xampp\htdocs\c-cplusplus\c++\bigint\src\bigint.cpp
+	"BigInt.h"
+	<iostream>
+
