@@ -13,6 +13,7 @@ cout << b << endl;
      cout << "Entrez un (grand) nombre: ";
      cin >> b;
 
+cout << b << endl;
      /*while(a < 1000000)
         a += b;
      cout << a << endl;*/
