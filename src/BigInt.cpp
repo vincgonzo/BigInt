@@ -1,5 +1,7 @@
 #include "BigInt.h"
 #include <string>
+#include <stdio.h>
+#include <string.h>
 #include <sstream>
 #include <map>
 
@@ -34,29 +36,29 @@ BigInt::BigInt(long long value)
     }
 }
 
-BigInt::BigInt(std::string stringInteger)
+BigInt::BigInt(const char* stringInteger)
 {
-    int size = stringInteger.length();
+    int sailleZ = strlen(stringInteger);
 
     base = BigInt::default_base;
     skip = 0;
     positive = (stringInteger[0] != '-');
-
+    cout << sailleZ;
     while (true) {
-        if (size <= 0) break;
-        if (!positive && size <= 1) break;
+        if (sailleZ <= 0) break;
+        if (!positive && sailleZ <= 1) break;
 
         int length = 0;
         int num = 0;
         int prefix = 1;
-        for (int i(size - 1); i >= 0 && i >= size - 9; --i) {
+        for (int i(sailleZ - 1); i >= 0 && i >= sailleZ - 9; --i) {
             if (stringInteger[i] < '0' || stringInteger[i] > '9') break;
             num += (stringInteger[i] - '0') * prefix;
             prefix *= 10;
             ++length;
         }
         number.push_back(num);
-        size -= length;
+        sailleZ -= length;
     }
 }
 
@@ -74,9 +76,9 @@ BigInt &BigInt::operator+=(BigInt const &b)
     if (!b.positive) {
         return *this -= b;
     }
-    std::vector<int>::iterator
+    vector<int>::iterator
         it1 = number.begin();
-    std::vector<int>::const_iterator
+    vector<int>::const_iterator
         it2 = b.number.begin();
     int sum = 0;
     while (it1 != number.end() || it2 != b.number.end()) {
@@ -109,7 +111,7 @@ BigInt BigInt::operator+(long long const &b) const
 
 BigInt &BigInt::operator+=(long long b)
 {
-    std::vector<int>::iterator it = number.begin();
+    vector<int>::iterator it = number.begin();
     if (skip > number.size()) {
         number.insert(number.end(), skip - number.size(), 0);
     }
@@ -143,9 +145,9 @@ BigInt BigInt::operator-(BigInt const &b) const
 
 BigInt &BigInt::operator-=(BigInt const &b)
 {
-    std::vector<int>::iterator
+    vector<int>::iterator
         it1 = number.begin();
-    std::vector<int>::const_iterator
+    vector<int>::const_iterator
         it2 = b.number.begin();
     int dif = 0;
     while (it1 != number.end() || it2 != b.number.end()) {
@@ -184,8 +186,8 @@ BigInt &BigInt::operator-=(BigInt const &b)
 BigInt BigInt::operator*(BigInt const &b)
 {
     if (b.number.size() == 1) return *this *= b.number[0];
-    std::vector<int>::iterator it1;
-    std::vector<int>::const_iterator it2;
+    vector<int>::iterator it1;
+    vector<int>::const_iterator it2;
     BigInt c;
     for (it1 = number.begin(); it1 != number.end(); ++it1) {
         for (it2 = b.number.begin(); it2 != b.number.end(); ++it2) {
@@ -215,7 +217,7 @@ BigInt BigInt::operator*(long long const &b)
 
 BigInt &BigInt::operator*=(int const &b)
 {
-    std::vector<int>::iterator it = number.begin();
+    vector<int>::iterator it = number.begin();
     long long sum = 0;
     while (it != number.end()) {
         sum += (long long) (*it) * b;
@@ -229,28 +231,28 @@ BigInt &BigInt::operator*=(int const &b)
 }
 
 //Power
-BigInt BigInt::pow(int const &power, std::map<int, BigInt> &lookup)
+BigInt BigInt::pow(int const &power, map<int, BigInt> &cp)
 {
     if (power == 1) return *this;
-    if (lookup.count(power)) return lookup[power];
+    if (cp.count(power)) return cp[power];
 
     int closestPower = 1;
     while (closestPower < power) closestPower <<= 1;
     closestPower >>= 1;
 
-    if (power == closestPower) lookup[power] = pow(power / 2, lookup) * pow(power / 2, lookup);
-    else lookup[power] = pow(closestPower, lookup) * pow(power - closestPower, lookup);
+    if (power == closestPower) cp[power] = pow(power / 2, cp) * pow(power / 2, cp);
+    else cp[power] = pow(closestPower, cp) * pow(power - closestPower, cp);
 
-    return lookup[power];
+    return cp[power];
 }
 
 BigInt &BigInt::pow(int const &power)
 {
-    std::map<int, BigInt> lookup;
+    map<int, BigInt> cp;
     if (power % 2 == 0 && !positive) {
         positive = true;
     }
-    *this = pow(power, lookup);
+    *this = pow(power, cp);
 
     return *this;
 }
@@ -345,7 +347,7 @@ int BigInt::trailing_zeros() const
     if (number.empty() || (number.size() == 1 && number[0] == 0)) return 1;
 
     int zeros = 0;
-    std::vector<int>::const_iterator it = number.begin();
+    vector<int>::const_iterator it = number.begin();
     if (number.size() > 1) {
         for (; it != number.end() - 1 && *it == 0; ++it) {
             zeros += 9;
@@ -376,7 +378,7 @@ BigInt &BigInt::abs()
 }
 
 //Input&Output
-std::ostream &operator<<(std::ostream &out, BigInt const &a)
+ostream &operator<<(ostream &out, BigInt const &a)
 {
     if (!a.number.size()) return out << 0;
     int i = a.number.size() - 1;
@@ -385,7 +387,7 @@ std::ostream &operator<<(std::ostream &out, BigInt const &a)
     if (i == -1) return out << 0;
     if (!a.positive) out << '-';
 
-    std::vector<int>::const_reverse_iterator it = a.number.rbegin() + (a.number.size() - i - 1);
+    vector<int>::const_reverse_iterator it = a.number.rbegin() + (a.number.size() - i - 1);
 
     out << *it++;
     for (; it != a.number.rend(); ++it) {
@@ -396,9 +398,9 @@ std::ostream &operator<<(std::ostream &out, BigInt const &a)
     return out;
 }
 
-std::istream &operator>>(std::istream &in, BigInt &a)
+istream &operator>>(istream &in, BigInt &a)
 {
-    std::string str;
+    char* str;
     in >> str;
 
     a = str;
@@ -422,9 +424,9 @@ BigInt abs(BigInt value)
     return value.abs();
 }
 
-std::string to_string(BigInt const &value)
+string to_string(BigInt const &value)
 {
-    std::ostringstream stream;
+    ostringstream stream;
     stream << value;
 
     return stream.str();

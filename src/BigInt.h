@@ -20,7 +20,7 @@ public:
     //Constructors
     BigInt();
     BigInt(long long);
-    BigInt(std::string);
+    BigInt(const char*);
     BigInt(const BigInt& b);
 
     //Adding

@@ -1,3 +1,4 @@
+#include <string>
 #include <iostream>
 #include "src/BigInt.h"
 
@@ -14,12 +15,15 @@ cout << b << endl;
      cin >> b;
 
 cout << b << endl;
-     /*while(a < 1000000)
+     while(a < 1000000)
         a += b;
-     cout << a << endl;*/
+     cout << a << endl;
 
-    /*BigInt c = "123456789012345678901234567890123456789012345678901234567890";
-    b = c * a;
+    BigInt c = "123456789012345678901234567890123456789012345678901234567890";
+
+    cout << c;
+
+   /* b = c * a;
     BigInt d = b / c;
     if(d != a)
         cout << "Bizarre. Ce message ne devrait pas apparaitre\n";*/
