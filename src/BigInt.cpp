@@ -229,6 +229,56 @@ BigInt &BigInt::operator*=(int const &b)
     return *this;
 }
 
+
+//Multiplication
+BigInt BigInt::operator/(BigInt const &b)
+{
+    if (b.m_nbr.size() == 1) return *this /= b.m_nbr[0];
+    vector<int>::iterator it1;
+    vector<int>::const_iterator it2;
+    BigInt c;
+    for (it1 = m_nbr.begin(); it1 != m_nbr.end(); ++it1) {
+        for (it2 = b.m_nbr.begin(); it2 != b.m_nbr.end(); ++it2) {
+            c.skip = (unsigned int) (it1 - m_nbr.begin()) + (it2 - b.m_nbr.begin()); //TODO
+            c += (long long) (*it1) / (*it2);
+        }
+    }
+    c.skip = 0;
+
+    return c;
+}
+
+BigInt &BigInt::operator/=(BigInt const &b)
+{
+    *this = *this / b;
+
+    return *this;
+}
+
+BigInt BigInt::operator/(long long const &b)
+{
+    BigInt c = *this;
+    c /= b;
+
+    return c;
+}
+
+BigInt &BigInt::operator/=(int const &b)
+{
+    vector<int>::iterator it = m_nbr.begin();
+    long long sum = 0;
+    while (it != m_nbr.end()) {
+        sum += (long long) (*it) / b;
+        *it = (int) (sum % m_base);
+        sum /= m_base;
+        ++it;
+    }
+    if (sum) m_nbr.push_back((int) sum);
+
+    return *this;
+}
+
+
 //Compare
 int BigInt::compare(const BigInt &a) const //0 this == a || -1 this < a || 1 this > a
 {

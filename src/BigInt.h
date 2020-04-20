@@ -39,6 +39,12 @@ public:
     BigInt operator*(long long const &);
     BigInt &operator*=(int const &);
 
+    //Division
+    BigInt operator/(BigInt const &);
+    BigInt &operator/=(BigInt const &);
+    BigInt operator/(long long const &);
+    BigInt &operator/=(int const &);
+
     //Compare
     bool operator<(const BigInt &) const;
     bool operator>(const BigInt &) const;
