@@ -10,9 +10,9 @@
 class BigInt
 {
 private:
-    std::vector<int> number;
-    bool positive;
-    int base;
+    std::vector<int> m_nbr;
+    bool m_positive;
+    int m_base;
     unsigned int skip;
     static const int default_base=1000000000;
 
@@ -20,7 +20,7 @@ public:
     //Constructors
     BigInt();
     BigInt(long long);
-    BigInt(const char*);
+    BigInt(std::string str);
     BigInt(const BigInt& b);
 
     //Adding
@@ -50,8 +50,6 @@ public:
     //Allocation
     BigInt operator=(const long long &);
 
-    //Access
-    int operator[](int const &);
 
     //Input&Output
     friend std::istream &operator>>(std::istream &, BigInt &);
@@ -61,21 +59,14 @@ public:
     void clear();
     BigInt &abs();
 
-    //Power
-    BigInt &pow(int const &);
-
     //Trivia
     int digits() const;
     int trailing_zeros() const;
 private:
     int segment_length(int) const;
-    BigInt pow(int const &, std::map<int, BigInt> &);
     int compare(BigInt const &) const; //0 a == b, -1 a < b, 1 a > b
 };
 
-BigInt abs(BigInt);
 std::string to_string(BigInt const &);
-BigInt factorial(int);
-
 
 #endif // BigInt_H_INCLUDED

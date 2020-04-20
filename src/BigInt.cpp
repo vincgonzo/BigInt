@@ -10,54 +10,53 @@ using namespace std;
 //Constructor
 BigInt::BigInt()
 {
-    positive = true;
-    base = BigInt::default_base;
+    m_positive = true;
+    m_base = BigInt::default_base;
     skip = 0;
 }
 BigInt::BigInt(const BigInt &b)
-        : number(b.number),
-          positive(b.positive),
-          base(b.base),
+        : m_nbr(b.m_nbr),
+          m_positive(b.m_positive),
+          m_base(b.m_base),
           skip(b.skip) { }
 BigInt::BigInt(long long value)
 {
-    base = BigInt::default_base;
+    m_base = BigInt::default_base;
     skip = 0;
     if (value < 0) {
-        positive = false;
+        m_positive = false;
         value *= -1;
     } else {
-        positive = true;
+        m_positive = true;
     }
 
     while (value) {
-        number.push_back((int) (value % base));
-        value /= base;
+        m_nbr.push_back((int) (value % m_base));
+        value /= m_base;
     }
 }
 
-BigInt::BigInt(const char* stringInteger)
+BigInt::BigInt(std::string str)
 {
-    int sailleZ = strlen(stringInteger);
+    int sailleZ = str.length();
 
-    base = BigInt::default_base;
+    m_base = BigInt::default_base;
     skip = 0;
-    positive = (stringInteger[0] != '-');
-    cout << sailleZ;
+    m_positive = (str[0] != '-');
     while (true) {
         if (sailleZ <= 0) break;
-        if (!positive && sailleZ <= 1) break;
+        if (!m_positive && sailleZ <= 1) break;
 
         int length = 0;
         int num = 0;
         int prefix = 1;
         for (int i(sailleZ - 1); i >= 0 && i >= sailleZ - 9; --i) {
-            if (stringInteger[i] < '0' || stringInteger[i] > '9') break;
-            num += (stringInteger[i] - '0') * prefix;
+            if (str[i] < '0' || str[i] > '9') break;
+            num += (str[i] - '0') * prefix;
             prefix *= 10;
             ++length;
         }
-        number.push_back(num);
+        m_nbr.push_back(num);
         sailleZ -= length;
     }
 }
@@ -73,30 +72,30 @@ BigInt BigInt::operator+(BigInt const &b) const
 
 BigInt &BigInt::operator+=(BigInt const &b)
 {
-    if (!b.positive) {
+    if (!b.m_positive) {
         return *this -= b;
     }
     vector<int>::iterator
-        it1 = number.begin();
+        it1 = m_nbr.begin();
     vector<int>::const_iterator
-        it2 = b.number.begin();
+        it2 = b.m_nbr.begin();
     int sum = 0;
-    while (it1 != number.end() || it2 != b.number.end()) {
-        if (it1 != number.end()) {
+    while (it1 != m_nbr.end() || it2 != b.m_nbr.end()) {
+        if (it1 != m_nbr.end()) {
             sum += *it1;
         } else {
-            number.push_back(0);
-            it1 = number.end()-1;
+            m_nbr.push_back(0);
+            it1 = m_nbr.end()-1;
         }
-        if (it2 != b.number.end()) {
+        if (it2 != b.m_nbr.end()) {
             sum += *it2;
             ++it2;
         }
-        *it1 = sum % base;
+        *it1 = sum % m_base;
         ++it1;
-        sum /= base;
+        sum /= m_base;
     }
-    if (sum) number.push_back(1);
+    if (sum) m_nbr.push_back(1);
 
     return *this;
 }
@@ -111,23 +110,23 @@ BigInt BigInt::operator+(long long const &b) const
 
 BigInt &BigInt::operator+=(long long b)
 {
-    vector<int>::iterator it = number.begin();
-    if (skip > number.size()) {
-        number.insert(number.end(), skip - number.size(), 0);
+    vector<int>::iterator it = m_nbr.begin();
+    if (skip > m_nbr.size()) {
+        m_nbr.insert(m_nbr.end(), skip - m_nbr.size(), 0);
     }
     it += skip;
     bool initial_flag=true;
     while (b || initial_flag) {
         initial_flag=false;
-        if (it != number.end()) {
-            *it += b % base;
-            b /= base;
-            b += *it / base;
-            *it %= base;
+        if (it != m_nbr.end()) {
+            *it += b % m_base;
+            b /= m_base;
+            b += *it / m_base;
+            *it %= m_base;
             ++it;
         } else {
-            number.push_back(0);
-            it = number.end() - 1;
+            m_nbr.push_back(0);
+            it = m_nbr.end() - 1;
         }
     }
 
@@ -146,37 +145,37 @@ BigInt BigInt::operator-(BigInt const &b) const
 BigInt &BigInt::operator-=(BigInt const &b)
 {
     vector<int>::iterator
-        it1 = number.begin();
+        it1 = m_nbr.begin();
     vector<int>::const_iterator
-        it2 = b.number.begin();
+        it2 = b.m_nbr.begin();
     int dif = 0;
-    while (it1 != number.end() || it2 != b.number.end()) {
-        if (it1 != number.end()) {
+    while (it1 != m_nbr.end() || it2 != b.m_nbr.end()) {
+        if (it1 != m_nbr.end()) {
             dif += *it1;
             ++it1;
         }
-        if (it2 != b.number.end()) {
+        if (it2 != b.m_nbr.end()) {
             dif -= *it2;
             ++it2;
         }
         if (dif < 0) {
-            *(it1 - 1) = dif + base;
+            *(it1 - 1) = dif + m_base;
             dif = -1;
         } else {
-            *(it1 - 1) = dif % base;
-            dif /= base;
+            *(it1 - 1) = dif % m_base;
+            dif /= m_base;
         }
     }
-    if (dif < 0) positive = false;
+    if (dif < 0) m_positive = false;
 
-    if (number.size() > 1)
+    if (m_nbr.size() > 1)
     {
         do
         {
-            it1 = number.end() - 1;
-            if (*it1 == 0) number.pop_back();
+            it1 = m_nbr.end() - 1;
+            if (*it1 == 0) m_nbr.pop_back();
             else break;
-        } while (number.size() > 1);
+        } while (m_nbr.size() > 1);
     }
 
     return *this;
@@ -185,13 +184,13 @@ BigInt &BigInt::operator-=(BigInt const &b)
 //Multiplication
 BigInt BigInt::operator*(BigInt const &b)
 {
-    if (b.number.size() == 1) return *this *= b.number[0];
+    if (b.m_nbr.size() == 1) return *this *= b.m_nbr[0];
     vector<int>::iterator it1;
     vector<int>::const_iterator it2;
     BigInt c;
-    for (it1 = number.begin(); it1 != number.end(); ++it1) {
-        for (it2 = b.number.begin(); it2 != b.number.end(); ++it2) {
-            c.skip = (unsigned int) (it1 - number.begin()) + (it2 - b.number.begin()); //TODO
+    for (it1 = m_nbr.begin(); it1 != m_nbr.end(); ++it1) {
+        for (it2 = b.m_nbr.begin(); it2 != b.m_nbr.end(); ++it2) {
+            c.skip = (unsigned int) (it1 - m_nbr.begin()) + (it2 - b.m_nbr.begin()); //TODO
             c += (long long) (*it1) * (*it2);
         }
     }
@@ -217,42 +216,15 @@ BigInt BigInt::operator*(long long const &b)
 
 BigInt &BigInt::operator*=(int const &b)
 {
-    vector<int>::iterator it = number.begin();
+    vector<int>::iterator it = m_nbr.begin();
     long long sum = 0;
-    while (it != number.end()) {
+    while (it != m_nbr.end()) {
         sum += (long long) (*it) * b;
-        *it = (int) (sum % base);
-        sum /= base;
+        *it = (int) (sum % m_base);
+        sum /= m_base;
         ++it;
     }
-    if (sum) number.push_back((int) sum);
-
-    return *this;
-}
-
-//Power
-BigInt BigInt::pow(int const &power, map<int, BigInt> &cp)
-{
-    if (power == 1) return *this;
-    if (cp.count(power)) return cp[power];
-
-    int closestPower = 1;
-    while (closestPower < power) closestPower <<= 1;
-    closestPower >>= 1;
-
-    if (power == closestPower) cp[power] = pow(power / 2, cp) * pow(power / 2, cp);
-    else cp[power] = pow(closestPower, cp) * pow(power - closestPower, cp);
-
-    return cp[power];
-}
-
-BigInt &BigInt::pow(int const &power)
-{
-    map<int, BigInt> cp;
-    if (power % 2 == 0 && !positive) {
-        positive = true;
-    }
-    *this = pow(power, cp);
+    if (sum) m_nbr.push_back((int) sum);
 
     return *this;
 }
@@ -260,17 +232,17 @@ BigInt &BigInt::pow(int const &power)
 //Compare
 int BigInt::compare(const BigInt &a) const //0 this == a || -1 this < a || 1 this > a
 {
-    if (positive && !a.positive) return 1;
-    if (!positive && a.positive) return -1;
+    if (m_positive && !a.m_positive) return 1;
+    if (!m_positive && a.m_positive) return -1;
 
     int check = 1;
-    if (!positive && !a.positive) check = -1;
+    if (!m_positive && !a.m_positive) check = -1;
 
-    if (number.size() < a.number.size()) return -1 * check;
-    if (number.size() > a.number.size()) return check;
-    for (size_t i(number.size()); i > 0; --i) {
-        if (number[i-1] < a.number[i-1]) return -1 * check;
-        if (number[i-1] > a.number[i-1]) return check;
+    if (m_nbr.size() < a.m_nbr.size()) return -1 * check;
+    if (m_nbr.size() > a.m_nbr.size()) return check;
+    for (size_t i(m_nbr.size()); i > 0; --i) {
+        if (m_nbr[i-1] < a.m_nbr[i-1]) return -1 * check;
+        if (m_nbr[i-1] > a.m_nbr[i-1]) return check;
     }
 
     return 0; // ==
@@ -313,66 +285,40 @@ bool BigInt::operator!=(BigInt const &b) const
 //Allocation
 BigInt BigInt::operator=(const long long &a)
 {
-    number.clear();
+    m_nbr.clear();
     long long t = a;
     do {
-        number.push_back((int) (t % base));
-        t /= base;
+        m_nbr.push_back((int) (t % m_base));
+        t /= m_base;
     } while (t != 0);
 
     return *this;
 }
 
-//Access
-int BigInt::operator[](int const &b)
-{
-    return to_string(*this)[b] - '0';
-}
-
 //Trivia
 int BigInt::digits() const
 {
-    int segments = number.size();
+    int segments = m_nbr.size();
 
     if (segments == 0) return 0;
 
     int digits = 9 * (segments - 1);
-    digits += segment_length(number.back());
+    digits += segment_length(m_nbr.back());
 
     return digits;
-}
-
-int BigInt::trailing_zeros() const
-{
-    if (number.empty() || (number.size() == 1 && number[0] == 0)) return 1;
-
-    int zeros = 0;
-    vector<int>::const_iterator it = number.begin();
-    if (number.size() > 1) {
-        for (; it != number.end() - 1 && *it == 0; ++it) {
-            zeros += 9;
-        }
-    }
-    int a = *it;
-    while (a % 10 == 0 && a) {
-        ++zeros;
-        a /= 10;
-    }
-
-    return zeros;
 }
 
 //Helpers
 void BigInt::clear()
 {
-    number.clear();
-    positive = true;
+    m_nbr.clear();
+    m_positive = true;
     skip = 0;
 }
 
 BigInt &BigInt::abs()
 {
-    positive = true;
+    m_positive = true;
 
     return *this;
 }
@@ -380,17 +326,17 @@ BigInt &BigInt::abs()
 //Input&Output
 ostream &operator<<(ostream &out, BigInt const &a)
 {
-    if (!a.number.size()) return out << 0;
-    int i = a.number.size() - 1;
-    for (; i>=0 && a.number[i] == 0; --i);
+    if (!a.m_nbr.size()) return out << 0;
+    int i = a.m_nbr.size() - 1;
+    for (; i>=0 && a.m_nbr[i] == 0; --i);
 
     if (i == -1) return out << 0;
-    if (!a.positive) out << '-';
+    if (!a.m_positive) out << '-';
 
-    vector<int>::const_reverse_iterator it = a.number.rbegin() + (a.number.size() - i - 1);
+    vector<int>::const_reverse_iterator it = a.m_nbr.rbegin() + (a.m_nbr.size() - i - 1);
 
     out << *it++;
-    for (; it != a.number.rend(); ++it) {
+    for (; it != a.m_nbr.rend(); ++it) {
         for (int i(0), len = a.segment_length(*it); i < 9 - len; ++i) out << '0';
         if (*it) out << *it;
     }
@@ -400,7 +346,7 @@ ostream &operator<<(ostream &out, BigInt const &a)
 
 istream &operator>>(istream &in, BigInt &a)
 {
-    char* str;
+    std::string str;
     in >> str;
 
     a = str;
@@ -419,31 +365,10 @@ int BigInt::segment_length(int segment) const
     return length;
 }
 
-BigInt abs(BigInt value)
-{
-    return value.abs();
-}
-
 string to_string(BigInt const &value)
 {
     ostringstream stream;
     stream << value;
 
     return stream.str();
-}
-
-BigInt factorial(int n)
-{
-    BigInt result = 1;
-    if (n % 2) {
-        result = n;
-        --n;
-    }
-    int last = 0;
-    for (; n >= 2; n -= 2) {
-        result *= n + last;
-        last += n;
-    }
-
-    return result;
 }

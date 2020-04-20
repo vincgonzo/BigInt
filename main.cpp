@@ -5,26 +5,24 @@
 using namespace std;
 
 int main() {
-     BigInt a = 123;
+     BigInt a(123);
      BigInt b;
+     BigInt g;
 
 cout << a << endl;
 cout << "====================" << endl;
-cout << b << endl;
      cout << "Entrez un (grand) nombre: ";
-     cin >> b;
+     cin >> g;
 
-cout << b << endl;
-     while(a < 1000000)
-        a += b;
-     cout << a << endl;
+cout << g << endl;
 
-    BigInt c = "123456789012345678901234567890123456789012345678901234567890";
+    BigInt c("154547675874997658616423456789012345678901234567890123456789012345678901234567890");
 
-    cout << c;
+    cout << c << endl;
 
-   /* b = c * a;
-    BigInt d = b / c;
+    b = c * g;
+    cout << b << endl;
+  /*  BigInt d = b / c;
     if(d != a)
         cout << "Bizarre. Ce message ne devrait pas apparaitre\n";*/
 }
