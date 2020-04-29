@@ -5,25 +5,27 @@
 using namespace std;
 
 int main() {
-    BigInt a(123);
-    BigInt b;
+    BigInt a(1000000000);
+    BigInt b(250);
     BigInt g;
 
     cout << a << endl;
-    cout << "====================" << endl;
-    cout << "Entrez un (grand) nombre: ";
-    cin >> g;
 
-    cout << "number G : " << g << endl;
-
-    BigInt c("154547675874997658616423456789012345678901234567890123456789012345678901234567890");
-
-    cout << "number C : " << c << endl;
-
-    b = c * g;
-    cout << "number B : " << b << endl;
-    BigInt d = b / a;
-    cout << "number D : " << d << endl;
-    if(d != a)
-        cout << "Bizarre. Ce message ne devrait pas apparaitre\n";
+    cout << a * b << endl;
+//    cout << "====================" << endl;
+//    cout << "Entrez un (grand) nombre: ";
+//    cin >> g;
+//
+//    cout << "number G : " << g << endl;
+//
+//    BigInt c("154547675874997658616423456789012345678901234567890123456789012345678901234567890");
+//
+//    cout << "number C : " << c << endl;
+//
+//    b = c * g;
+//    cout << "number B : " << b << endl;
+//    BigInt d = b / a;
+//    cout << "number D : " << d << endl;
+//    if(d != a)
+//        cout << "Bizarre. Ce message ne devrait pas apparaitre\n";
 }

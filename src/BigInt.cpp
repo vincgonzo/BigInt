@@ -11,17 +11,14 @@ using namespace std;
 BigInt::BigInt()
 {
     m_positive = true;
-    m_base = BigInt::default_base;
     skip = 0;
 }
 BigInt::BigInt(const BigInt &b)
         : m_nbr(b.m_nbr),
           m_positive(b.m_positive),
-          m_base(b.m_base),
           skip(b.skip) { }
 BigInt::BigInt(long long value)
 {
-    m_base = BigInt::default_base;
     skip = 0;
     if (value < 0) {
         m_positive = false;
@@ -31,16 +28,14 @@ BigInt::BigInt(long long value)
     }
 
     while (value) {
-        m_nbr.push_back((int) (value % m_base));
-        value /= m_base;
+        m_nbr.push_back((int) (value % default_base));
+        value /= default_base;
     }
 }
 
 BigInt::BigInt(std::string str)
 {
     int sailleZ = str.length();
-
-    m_base = BigInt::default_base;
     skip = 0;
     m_positive = (str[0] != '-');
     while (true) {
@@ -65,6 +60,9 @@ BigInt::BigInt(std::string str)
 BigInt BigInt::operator+(BigInt const &b) const
 {
     BigInt c = *this;
+    if (!b.m_positive || !m_positive) {
+        return c - b;
+    }
     c += b;
 
     return c;
@@ -72,7 +70,7 @@ BigInt BigInt::operator+(BigInt const &b) const
 
 BigInt &BigInt::operator+=(BigInt const &b)
 {
-    if (!b.m_positive) {
+    if (!b.m_positive || !m_positive) {
         return *this -= b;
     }
     vector<int>::iterator
@@ -91,9 +89,9 @@ BigInt &BigInt::operator+=(BigInt const &b)
             sum += *it2;
             ++it2;
         }
-        *it1 = sum % m_base;
+        *it1 = sum % default_base;
         ++it1;
-        sum /= m_base;
+        sum /= default_base;
     }
     if (sum) m_nbr.push_back(1);
 
@@ -119,10 +117,10 @@ BigInt &BigInt::operator+=(long long b)
     while (b || initial_flag) {
         initial_flag=false;
         if (it != m_nbr.end()) {
-            *it += b % m_base;
-            b /= m_base;
-            b += *it / m_base;
-            *it %= m_base;
+            *it += b % default_base;
+            b /= default_base;
+            b += *it / default_base;
+            *it %= default_base;
             ++it;
         } else {
             m_nbr.push_back(0);
@@ -159,11 +157,11 @@ BigInt &BigInt::operator-=(BigInt const &b)
             ++it2;
         }
         if (dif < 0) {
-            *(it1 - 1) = dif + m_base;
+            *(it1 - 1) = dif + default_base;
             dif = -1;
         } else {
-            *(it1 - 1) = dif % m_base;
-            dif /= m_base;
+            *(it1 - 1) = dif % default_base;
+            dif /= default_base;
         }
     }
     if (dif < 0) m_positive = false;
@@ -220,8 +218,8 @@ BigInt &BigInt::operator*=(int const &b)
     long long sum = 0;
     while (it != m_nbr.end()) {
         sum += (long long) (*it) * b;
-        *it = (int) (sum % m_base);
-        sum /= m_base;
+        *it = (int) (sum % default_base);
+        sum /= default_base;
         ++it;
     }
     if (sum) m_nbr.push_back((int) sum);
@@ -269,8 +267,8 @@ BigInt &BigInt::operator/=(int const &b)
     long long sum = 0;
     while (it != m_nbr.end()) {
         sum += (long long) (*it) / b;
-        *it = (int) (sum % m_base);
-        sum /= m_base;
+        *it = (int) (sum % default_base);
+        sum /= default_base;
         ++it;
     }
     if (sum) m_nbr.push_back((int) sum);
@@ -338,8 +336,8 @@ BigInt BigInt::operator=(const long long &a)
     m_nbr.clear();
     long long t = a;
     do {
-        m_nbr.push_back((int) (t % m_base));
-        t /= m_base;
+        m_nbr.push_back((int) (t % default_base));
+        t /= default_base;
     } while (t != 0);
 
     return *this;

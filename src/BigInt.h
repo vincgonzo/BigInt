@@ -12,7 +12,6 @@ class BigInt
 private:
     std::vector<int> m_nbr;
     bool m_positive;
-    int m_base;
     unsigned int skip;
     static const int default_base=1000000000;
 
