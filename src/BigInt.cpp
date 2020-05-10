@@ -8,23 +8,21 @@
 using namespace std;
 
 //Constructor
-BigInt::BigInt()
-{
-    m_positive = true;
-    skip = 0;
-}
+BigInt::BigInt():sign(1)
+{}
+
 BigInt::BigInt(const BigInt &b)
         : m_nbr(b.m_nbr),
-          m_positive(b.m_positive),
-          skip(b.skip) { }
+          sign(b.sign)
+{}
+
 BigInt::BigInt(long long value)
 {
-    skip = 0;
     if (value < 0) {
-        m_positive = false;
+        sign = 0;
         value *= -1;
     } else {
-        m_positive = true;
+        sign = true;
     }
 
     while (value) {
@@ -36,11 +34,10 @@ BigInt::BigInt(long long value)
 BigInt::BigInt(std::string str)
 {
     int sailleZ = str.length();
-    skip = 0;
-    m_positive = (str[0] != '-');
+    sign = (str[0] != '-');
     while (true) {
         if (sailleZ <= 0) break;
-        if (!m_positive && sailleZ <= 1) break;
+        if (!sign && sailleZ <= 1) break;
 
         int length = 0;
         int num = 0;
@@ -60,7 +57,7 @@ BigInt::BigInt(std::string str)
 BigInt BigInt::operator+(BigInt const &b) const
 {
     BigInt c = *this;
-    if (!b.m_positive || !m_positive) {
+    if (!b.sign || !sign) {
         return c - b;
     }
     c += b;
@@ -70,7 +67,7 @@ BigInt BigInt::operator+(BigInt const &b) const
 
 BigInt &BigInt::operator+=(BigInt const &b)
 {
-    if (!b.m_positive || !m_positive) {
+    if (!b.sign || !sign) {
         return *this -= b;
     }
     vector<int>::iterator
@@ -109,10 +106,6 @@ BigInt BigInt::operator+(long long const &b) const
 BigInt &BigInt::operator+=(long long b)
 {
     vector<int>::iterator it = m_nbr.begin();
-    if (skip > m_nbr.size()) {
-        m_nbr.insert(m_nbr.end(), skip - m_nbr.size(), 0);
-    }
-    it += skip;
     bool initial_flag=true;
     while (b || initial_flag) {
         initial_flag=false;
@@ -164,7 +157,7 @@ BigInt &BigInt::operator-=(BigInt const &b)
             dif /= default_base;
         }
     }
-    if (dif < 0) m_positive = false;
+    if (dif < 0) sign = false;
 
     if (m_nbr.size() > 1)
     {
@@ -188,11 +181,11 @@ BigInt BigInt::operator*(BigInt const &b)
     BigInt c;
     for (it1 = m_nbr.begin(); it1 != m_nbr.end(); ++it1) {
         for (it2 = b.m_nbr.begin(); it2 != b.m_nbr.end(); ++it2) {
-            c.skip = (unsigned int) (it1 - m_nbr.begin()) + (it2 - b.m_nbr.begin()); //TODO
+//            c.skip = (unsigned int) (it1 - m_nbr.begin()) + (it2 - b.m_nbr.begin()); //TODO
             c += (long long) (*it1) * (*it2);
         }
     }
-    c.skip = 0;
+//    c.skip = 0;
 
     return c;
 }
@@ -204,7 +197,7 @@ BigInt &BigInt::operator*=(BigInt const &b)
     return *this;
 }
 
-BigInt BigInt::operator*(long long const &b)
+BigInt BigInt::operator*(int b)
 {
     BigInt c = *this;
     c *= b;
@@ -212,19 +205,24 @@ BigInt BigInt::operator*(long long const &b)
     return c;
 }
 
-BigInt &BigInt::operator*=(int const &b)
+BigInt &BigInt::operator*=(int b)
 {
-    vector<int>::iterator it = m_nbr.begin();
-    long long sum = 0;
-    while (it != m_nbr.end()) {
-        sum += (long long) (*it) * b;
-        *it = (int) (sum % default_base);
-        sum /= default_base;
-        ++it;
+//    vector<int>::iterator it = m_nbr.begin();
+    if (b < 0)
+        sign = -sign, b = -b;
+    for (int i = 0, sum = 0; i < (int) m_nbr.size() || sum; ++i)
+    {
+        if(i == m_nbr.size())
+            m_nbr.push_back(0);
+//            std::cout << " sum : " <<  sum << std::endl;
+//            std::cout << " iterator before : " <<  m_nbr[i] << std::endl;
+        long long calcul = m_nbr[i] * (long long) b + sum;
+//            std::cout << " calcul : " <<  calcul << std::endl;
+        sum = (int) (calcul / default_base);
+//            std::cout << " sum after calcul : " <<  sum << std::endl;
+        m_nbr[i] = (int) (calcul % default_base);
+//            std::cout << " iterator after mutl and trim : " <<  m_nbr[i] << std::endl;
     }
-    if (sum) m_nbr.push_back((int) sum);
-
-    return *this;
 }
 
 
@@ -237,11 +235,11 @@ BigInt BigInt::operator/(BigInt const &b)
     BigInt c;
     for (it1 = m_nbr.begin(); it1 != m_nbr.end(); ++it1) {
         for (it2 = b.m_nbr.begin(); it2 != b.m_nbr.end(); ++it2) {
-            c.skip = (unsigned int) (it1 - m_nbr.begin()) + (it2 - b.m_nbr.begin()); //TODO
+//            c.skip = (unsigned int) (it1 - m_nbr.begin()) + (it2 - b.m_nbr.begin()); //TODO
             c += (long long) (*it1) / (*it2);
         }
     }
-    c.skip = 0;
+//    c.skip = 0;
 
     return c;
 }
@@ -280,11 +278,11 @@ BigInt &BigInt::operator/=(int const &b)
 //Compare
 int BigInt::compare(const BigInt &a) const //0 this == a || -1 this < a || 1 this > a
 {
-    if (m_positive && !a.m_positive) return 1;
-    if (!m_positive && a.m_positive) return -1;
+    if (sign && !a.sign) return 1;
+    if (!sign && a.sign) return -1;
 
     int check = 1;
-    if (!m_positive && !a.m_positive) check = -1;
+    if (!sign && !a.sign) check = -1;
 
     if (m_nbr.size() < a.m_nbr.size()) return -1 * check;
     if (m_nbr.size() > a.m_nbr.size()) return check;
@@ -360,13 +358,13 @@ int BigInt::digits() const
 void BigInt::clear()
 {
     m_nbr.clear();
-    m_positive = true;
-    skip = 0;
+    sign = 1;
+//    skip = 0;
 }
 
 BigInt &BigInt::abs()
 {
-    m_positive = true;
+    sign = 1;
 
     return *this;
 }
@@ -379,7 +377,7 @@ ostream &operator<<(ostream &out, BigInt const &a)
     for (; i>=0 && a.m_nbr[i] == 0; --i);
 
     if (i == -1) return out << 0;
-    if (!a.m_positive) out << '-';
+    if (!a.sign) out << '-';
 
     vector<int>::const_reverse_iterator it = a.m_nbr.rbegin() + (a.m_nbr.size() - i - 1);
 

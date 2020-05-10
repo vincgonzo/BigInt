@@ -11,8 +11,7 @@ class BigInt
 {
 private:
     std::vector<int> m_nbr;
-    bool m_positive;
-    unsigned int skip;
+    int sign;
     static const int default_base=1000000000;
 
 public:
@@ -35,8 +34,8 @@ public:
     //Multiplication
     BigInt operator*(BigInt const &);
     BigInt &operator*=(BigInt const &);
-    BigInt operator*(long long const &);
-    BigInt &operator*=(int const &);
+    BigInt operator*(int );
+    BigInt &operator*=(int );
 
     //Division
     BigInt operator/(BigInt const &);
