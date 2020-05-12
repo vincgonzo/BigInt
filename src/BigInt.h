@@ -41,7 +41,7 @@ public:
     BigInt operator/(BigInt const &);
     BigInt &operator/=(BigInt const &);
     BigInt operator/(long long const &);
-    BigInt &operator/=(int const &);
+    BigInt &operator/=(int );
 
     //Compare
     bool operator<(const BigInt &) const;

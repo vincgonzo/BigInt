@@ -6,8 +6,9 @@ using namespace std;
 
 int main() {
     BigInt a(455847562689735);
-    BigInt b(250);
+    BigInt b("250");
     BigInt g;
+    BigInt c("154547675874997658616423456789012345678901234567890123456789012345678901234567890");
 
 
     int test3(43560);
@@ -24,11 +25,16 @@ int main() {
 //
 
     cout << a << endl;
-
     a *= test3;
-
     cout << a << endl;
-    BigInt c("154547675874997658616423456789012345678901234567890123456789012345678901234567890");
+    a /= test3;
+    cout << a << endl;
+
+    cout << "======== BigInt try ============" << endl;
+    cout << c << endl;
+    c *= b;
+    cout << c << endl;    c /= b;
+    cout << c << endl;
 ////
 //    cout << "number C : " << c << endl;
 //    c *= test3;

@@ -259,17 +259,25 @@ BigInt BigInt::operator/(long long const &b)
     return c;
 }
 
-BigInt &BigInt::operator/=(int const &b)
+BigInt &BigInt::operator/=(int b)
 {
-    vector<int>::iterator it = m_nbr.begin();
-    long long sum = 0;
-    while (it != m_nbr.end()) {
-        sum += (long long) (*it) / b;
-        *it = (int) (sum % default_base);
-        sum /= default_base;
-        ++it;
+//    vector<int>::iterator it = m_nbr.begin();
+//    long long sum = 0;
+//    while (it != m_nbr.end()) {
+//        sum += (long long) (*it) / b;
+//        *it = (int) (sum % default_base);
+//        sum /= default_base;
+//        ++it;
+//    }
+//    if (sum) m_nbr.push_back((int) sum);
+    if (b < 0)
+            sign = -sign, b = -b;
+    for (int i = (int) m_nbr.size() - 1, rem = 0; i >= 0; --i)
+    {
+        long long cur = m_nbr[i] + rem * (long long) default_base;
+        m_nbr[i] = (int) (cur / b);
+        rem = (int) (cur % b);
     }
-    if (sum) m_nbr.push_back((int) sum);
 
     return *this;
 }
