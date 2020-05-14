@@ -172,20 +172,28 @@ BigInt &BigInt::operator-=(BigInt const &b)
     return *this;
 }
 
+void BigInt::decale(int nb) {
+   m_nbr.resize(m_nbr.size() + nb);
+
+   for(int i = m_nbr.size() - 1; i >= nb; --i)
+      m_nbr[i] = m_nbr[i - nb];
+
+   for(int i = 0; i < nb; ++i)
+      m_nbr[i] = 0;
+}
 //Multiplication
 BigInt BigInt::operator*(BigInt const &b)
 {
-    if (b.m_nbr.size() == 1) return *this *= b.m_nbr[0];
-    vector<int>::iterator it1;
-    vector<int>::const_iterator it2;
-    BigInt c;
-    for (it1 = m_nbr.begin(); it1 != m_nbr.end(); ++it1) {
-        for (it2 = b.m_nbr.begin(); it2 != b.m_nbr.end(); ++it2) {
-//            c.skip = (unsigned int) (it1 - m_nbr.begin()) + (it2 - b.m_nbr.begin()); //TODO
-            c += (long long) (*it1) * (*it2);
-        }
+    vector<int>::const_iterator it1;
+    BigInt c(0), tmp(0);
+    int decal(0);
+    for (it1 = b.m_nbr.begin(); it1 != b.m_nbr.end(); ++it1) {
+        tmp += *this * (*it1);
+        std::cout << "[tmp] evolved =>  " << tmp << std::endl;
+        tmp.decale(decal++);
+        std::cout << "[tmp] decaled =>  " << tmp << std::endl;
+        c += tmp;
     }
-//    c.skip = 0;
 
     return c;
 }
@@ -193,7 +201,6 @@ BigInt BigInt::operator*(BigInt const &b)
 BigInt &BigInt::operator*=(BigInt const &b)
 {
     *this = *this * b;
-
     return *this;
 }
 
@@ -207,39 +214,36 @@ BigInt BigInt::operator*(int b)
 
 BigInt &BigInt::operator*=(int b)
 {
-//    vector<int>::iterator it = m_nbr.begin();
     if (b < 0)
         sign = -sign, b = -b;
-    for (int i = 0, sum = 0; i < (int) m_nbr.size() || sum; ++i)
+    int report(0);
+    for (int i = 0; i < (int) m_nbr.size(); ++i)
     {
-        if(i == m_nbr.size())
-            m_nbr.push_back(0);
-//            std::cout << " sum : " <<  sum << std::endl;
-//            std::cout << " iterator before : " <<  m_nbr[i] << std::endl;
-        long long calcul = m_nbr[i] * (long long) b + sum;
-//            std::cout << " calcul : " <<  calcul << std::endl;
-        sum = (int) (calcul / default_base);
-//            std::cout << " sum after calcul : " <<  sum << std::endl;
+        std::cout << "value start :: " << m_nbr[i] << std::endl;
+        long long calcul = m_nbr[i] * (long long) b + report;
+        std::cout << "calcul :: " << calcul << std::endl;
+        report = (int) (calcul / default_base);
+        std::cout << "report :: " << report << std::endl;
         m_nbr[i] = (int) (calcul % default_base);
-//            std::cout << " iterator after mutl and trim : " <<  m_nbr[i] << std::endl;
+        std::cout << ":::                 value keeped :: " << m_nbr[i] << std::endl;
     }
+    if(report != 0)
+        m_nbr.push_back(report);
+
+    return *this;;
 }
 
 
 //Multiplication
 BigInt BigInt::operator/(BigInt const &b)
 {
-    if (b.m_nbr.size() == 1) return *this /= b.m_nbr[0];
-    vector<int>::iterator it1;
-    vector<int>::const_iterator it2;
-    BigInt c;
-    for (it1 = m_nbr.begin(); it1 != m_nbr.end(); ++it1) {
-        for (it2 = b.m_nbr.begin(); it2 != b.m_nbr.end(); ++it2) {
-//            c.skip = (unsigned int) (it1 - m_nbr.begin()) + (it2 - b.m_nbr.begin()); //TODO
-            c += (long long) (*it1) / (*it2);
-        }
+    std::vector<int>::const_iterator it1;
+    BigInt c(0), tmp(0);
+    for (it1 = b.m_nbr.begin(); it1 != b.m_nbr.end(); ++it1)
+    {
+        BigInt tmp = *this / (*it1);
+        c += tmp;
     }
-//    c.skip = 0;
 
     return c;
 }
@@ -251,7 +255,7 @@ BigInt &BigInt::operator/=(BigInt const &b)
     return *this;
 }
 
-BigInt BigInt::operator/(long long const &b)
+BigInt BigInt::operator/(int const &b)
 {
     BigInt c = *this;
     c /= b;
@@ -261,15 +265,6 @@ BigInt BigInt::operator/(long long const &b)
 
 BigInt &BigInt::operator/=(int b)
 {
-//    vector<int>::iterator it = m_nbr.begin();
-//    long long sum = 0;
-//    while (it != m_nbr.end()) {
-//        sum += (long long) (*it) / b;
-//        *it = (int) (sum % default_base);
-//        sum /= default_base;
-//        ++it;
-//    }
-//    if (sum) m_nbr.push_back((int) sum);
     if (b < 0)
             sign = -sign, b = -b;
     for (int i = (int) m_nbr.size() - 1, rem = 0; i >= 0; --i)

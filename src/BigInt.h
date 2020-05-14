@@ -5,6 +5,7 @@
 
 #include <vector>
 #include <iostream>
+#include <limits>
 #include <map>
 
 class BigInt
@@ -12,7 +13,7 @@ class BigInt
 private:
     std::vector<int> m_nbr;
     int sign;
-    static const int default_base=1000000000;
+    static const int default_base=std::numeric_limits<int>::max();
 
 public:
     //Constructors
@@ -20,6 +21,8 @@ public:
     BigInt(long long);
     BigInt(std::string str);
     BigInt(const BigInt& b);
+
+    void decale(int nb);
 
     //Adding
     BigInt operator+(BigInt const &) const;
@@ -40,7 +43,7 @@ public:
     //Division
     BigInt operator/(BigInt const &);
     BigInt &operator/=(BigInt const &);
-    BigInt operator/(long long const &);
+    BigInt operator/(int const &);
     BigInt &operator/=(int );
 
     //Compare
