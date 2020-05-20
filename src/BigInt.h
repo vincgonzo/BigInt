@@ -13,7 +13,8 @@ class BigInt
 private:
     std::vector<int> m_nbr;
     int sign;
-    static const int default_base=std::numeric_limits<int>::max();
+//    static const int default_base=std::numeric_limits<int>::max();
+    static const int default_base=1000000000;
 
 public:
     //Constructors
@@ -27,6 +28,8 @@ public:
     //Adding
     BigInt operator+(BigInt const &) const;
     BigInt &operator+=(BigInt const &);
+    BigInt operator+(int const &) const;
+    BigInt &operator+=(int);
     BigInt operator+(long long const &) const;
     BigInt &operator+=(long long);
 

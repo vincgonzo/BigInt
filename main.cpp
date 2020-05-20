@@ -8,12 +8,25 @@ using namespace std;
 int main() {
     BigInt g("51545728427386549532");
     BigInt c("154547675874997658616423456789012345678901234567890123456789012345678901234567890");
+    BigInt y("154547675874997658616423456789012345678901234567890123456789012345678901234567878");
 
 
     BigInt a(455847562689735);
     int b(std::numeric_limits<int>::max() - 1);
     BigInt test3(std::numeric_limits<int>::max() - 1);
 //
+    if(c < y){
+        cout << "_______ c < y __________" << endl;
+    }
+    if(c > y){
+        cout << "_______ c > y __________" << endl;
+    }
+    if(c == y){
+        cout << "_______ c == y __________" << endl;
+    }
+//    cout << c << endl;
+//    c += y;
+//    cout << c << endl;
 
     cout << a << endl;
     cout << "%%%%%%%%%%%%%%%   Multiplication with : " << b << "  %%%%%%%%%%%%%%%%%%%%%%" << endl;

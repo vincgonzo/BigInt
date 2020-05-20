@@ -70,20 +70,34 @@ BigInt &BigInt::operator+=(BigInt const &b)
     if (!b.sign || !sign) {
         return *this -= b;
     }
+    long long sum(0);
+//    BigInt c(0), tmp(0);
+//
+//std::cout << b << std::endl;
+//std::cout << "trying the addition ............................... " << std::endl;
+//std::cout << "attempted iteration " << b.m_nbr.size() << std::endl;
+////
+//    for(auto i = 0; i < b.m_nbr.size(); i++)
+//    {
+//std::cout << "iteration "  << std::endl;
+////
+//        tmp = *this + (int) (b.m_nbr);
+////        c += tmp;
+//    }
+////
     vector<int>::iterator
         it1 = m_nbr.begin();
     vector<int>::const_iterator
         it2 = b.m_nbr.begin();
-    long long sum = 0;
     while (it1 != m_nbr.end() || it2 != b.m_nbr.end()) {
         if (it1 != m_nbr.end()) {
-            sum += *it1;
+            sum += (long long) *it1;
         } else {
             m_nbr.push_back(0);
             it1 = m_nbr.end()-1;
         }
         if (it2 != b.m_nbr.end()) {
-            sum += *it2;
+            sum += (long long) *it2;
             ++it2;
         }
         *it1 = sum % default_base;
@@ -92,21 +106,61 @@ BigInt &BigInt::operator+=(BigInt const &b)
     }
     if (sum) m_nbr.push_back(1);
 
+std::cout << "results mine " << *this << std::endl;
+std::cout << "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%" << std::endl;
+//std::cout << "results second " << c << std::endl;
+std::cout << "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%" << std::endl;
     return *this;
+//    return c;
 }
 
-BigInt BigInt::operator+(long long const &b) const
+BigInt BigInt::operator+(int const &b) const
 {
+    std::cout << "integer add " << std::endl;
     BigInt c = *this;
     c += b;
 
     return c;
 }
 
-BigInt &BigInt::operator+=(long long b)
+BigInt BigInt::operator+(long long const &b) const
 {
+    std::cout << "integer add " << std::endl;
+    BigInt c = *this;
+    c += b;
+
+    return c;
+}
+
+BigInt &BigInt::operator+=(int b)
+{
+    std::cout << "integer add " << std::endl;
     vector<int>::iterator it = m_nbr.begin();
     bool initial_flag=true;
+    while (b || initial_flag) {
+        initial_flag=false;
+        if (it != m_nbr.end()) {
+            *it += b % default_base;
+            b /= default_base;
+            b += *it / default_base;
+            *it %= default_base;
+            ++it;
+        } else {
+            m_nbr.push_back(0);
+            it = m_nbr.end() - 1;
+        }
+    }
+
+    return *this;
+}
+
+BigInt &BigInt::operator+=(long long b)
+{
+    std::cout << "long long add " << std::endl;
+    vector<int>::iterator it = m_nbr.begin();
+    bool initial_flag=true;
+//    for(it = m_nbr.begin(); it != m_nbr.end(); it++){
+
     while (b || initial_flag) {
         initial_flag=false;
         if (it != m_nbr.end()) {
@@ -188,10 +242,11 @@ BigInt BigInt::operator*(BigInt const &b)
     BigInt c(0), tmp(0);
     int decal(0);
     for (it1 = b.m_nbr.begin(); it1 != b.m_nbr.end(); ++it1) {
+            std::cout << "Indivdually I have a this = " << *this << "; and iterator = ";
         tmp += *this * (*it1);
-//        std::cout << "[tmp] evolved =>  " << tmp << std::endl;
+        std::cout << "[tmp] evolved =>  " << tmp << std::endl;
         tmp.decale(decal++);
-//        std::cout << "[tmp] decaled =>  " << tmp << std::endl;
+        std::cout << "[tmp] decaled =>  " << tmp << std::endl;
         c += tmp;
     }
 
@@ -217,15 +272,16 @@ BigInt &BigInt::operator*=(int b)
     if (b < 0)
         sign = -sign, b = -b;
     long long report(0);
+//        std::cout << "b = " << b << std::endl;
     for (int i = 0; i < (int) m_nbr.size(); ++i)
     {
-//        std::cout << "value start :: " << m_nbr[i] << std::endl;
+        std::cout << "value start :: " << m_nbr[i] << std::endl;
         long long calcul = m_nbr[i] * (long long) b + report;
-//        std::cout << "calcul :: " << calcul << std::endl;
+        std::cout << "calcul :: " << calcul << std::endl;
         report = calcul / default_base;
-//        std::cout << "report :: " << report << std::endl;
+        std::cout << "report :: " << report << std::endl;
         m_nbr[i] = (int) (calcul % default_base);
-//        std::cout << ":::                 value keeped :: " << m_nbr[i] << std::endl;
+        std::cout << ":::                 value keeped :: " << m_nbr[i] << std::endl;
     }
     if(report != 0)
         m_nbr.push_back(report);
