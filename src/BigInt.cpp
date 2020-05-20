@@ -74,7 +74,7 @@ BigInt &BigInt::operator+=(BigInt const &b)
         it1 = m_nbr.begin();
     vector<int>::const_iterator
         it2 = b.m_nbr.begin();
-    int sum = 0;
+    long long sum = 0;
     while (it1 != m_nbr.end() || it2 != b.m_nbr.end()) {
         if (it1 != m_nbr.end()) {
             sum += *it1;
@@ -139,7 +139,7 @@ BigInt &BigInt::operator-=(BigInt const &b)
         it1 = m_nbr.begin();
     vector<int>::const_iterator
         it2 = b.m_nbr.begin();
-    int dif = 0;
+    long long dif(0);
     while (it1 != m_nbr.end() || it2 != b.m_nbr.end()) {
         if (it1 != m_nbr.end()) {
             dif += *it1;
@@ -189,9 +189,9 @@ BigInt BigInt::operator*(BigInt const &b)
     int decal(0);
     for (it1 = b.m_nbr.begin(); it1 != b.m_nbr.end(); ++it1) {
         tmp += *this * (*it1);
-        std::cout << "[tmp] evolved =>  " << tmp << std::endl;
+//        std::cout << "[tmp] evolved =>  " << tmp << std::endl;
         tmp.decale(decal++);
-        std::cout << "[tmp] decaled =>  " << tmp << std::endl;
+//        std::cout << "[tmp] decaled =>  " << tmp << std::endl;
         c += tmp;
     }
 
@@ -216,16 +216,16 @@ BigInt &BigInt::operator*=(int b)
 {
     if (b < 0)
         sign = -sign, b = -b;
-    int report(0);
+    long long report(0);
     for (int i = 0; i < (int) m_nbr.size(); ++i)
     {
-        std::cout << "value start :: " << m_nbr[i] << std::endl;
+//        std::cout << "value start :: " << m_nbr[i] << std::endl;
         long long calcul = m_nbr[i] * (long long) b + report;
-        std::cout << "calcul :: " << calcul << std::endl;
-        report = (int) (calcul / default_base);
-        std::cout << "report :: " << report << std::endl;
+//        std::cout << "calcul :: " << calcul << std::endl;
+        report = calcul / default_base;
+//        std::cout << "report :: " << report << std::endl;
         m_nbr[i] = (int) (calcul % default_base);
-        std::cout << ":::                 value keeped :: " << m_nbr[i] << std::endl;
+//        std::cout << ":::                 value keeped :: " << m_nbr[i] << std::endl;
     }
     if(report != 0)
         m_nbr.push_back(report);

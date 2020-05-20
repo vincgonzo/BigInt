@@ -5,6 +5,8 @@
 	<limits>
 	"src/BigInt.h"
 
+1589493400 t.h"
+
 1589490192 c:\xampp\htdocs\c-cplusplus\c++\bigint\src\bigint.h
 	<iostream>
 	<vector>
@@ -13,7 +15,31 @@
 	<limits>
 	<map>
 
+1589493314 
+
 1589493314 source:c:\xampp\htdocs\c-cplusplus\c++\bigint\src\bigint.cpp
+	"BigInt.h"
+	<string>
+	<stdio.h>
+	<string.h>
+	<sstream>
+	<map>
+
+1589968132 source:/home/user/Bureau/dev-lab/BigInt/main.cpp
+	<string>
+	<iostream>
+	<limits>
+	"src/BigInt.h"
+
+1589968132 /home/user/Bureau/dev-lab/BigInt/src/BigInt.h
+	<iostream>
+	<vector>
+	<vector>
+	<iostream>
+	<limits>
+	<map>
+
+1589970458 source:/home/user/Bureau/dev-lab/BigInt/src/BigInt.cpp
 	"BigInt.h"
 	<string>
 	<stdio.h>

@@ -14,6 +14,7 @@ int main() {
     int b(std::numeric_limits<int>::max() - 1);
     BigInt test3(std::numeric_limits<int>::max() - 1);
 //
+
     cout << a << endl;
     cout << "%%%%%%%%%%%%%%%   Multiplication with : " << b << "  %%%%%%%%%%%%%%%%%%%%%%" << endl;
     a *= b;
