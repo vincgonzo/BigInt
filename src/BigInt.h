@@ -42,12 +42,15 @@ public:
     BigInt &operator*=(BigInt const &);
     BigInt operator*(int );
     BigInt &operator*=(int );
-
     //Division
     BigInt operator/(BigInt const &);
     BigInt &operator/=(BigInt const &);
     BigInt operator/(int const &);
     BigInt &operator/=(int );
+
+    //Modulo
+    BigInt operator%(const int );
+    BigInt operator%(BigInt const &);
 
     //Compare
     bool operator<(const BigInt &) const;

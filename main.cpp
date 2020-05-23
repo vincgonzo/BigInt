@@ -11,30 +11,11 @@ int main() {
     BigInt y("154547675874997658616423456789012345678901234567890123456789012345678901234567878");
 
 
-    BigInt a(455847562689735);
-    int b(std::numeric_limits<int>::max() - 1);
-    BigInt test3(std::numeric_limits<int>::max() - 1);
-//
-    if(c < y){
-        cout << "_______ c < y __________" << endl;
-    }
-    if(c > y){
-        cout << "_______ c > y __________" << endl;
-    }
-    if(c == y){
-        cout << "_______ c == y __________" << endl;
-    }
-//    cout << c << endl;
-//    c += y;
-//    cout << c << endl;
+    BigInt a(45584754875);
 
-    cout << a << endl;
-    cout << "%%%%%%%%%%%%%%%   Multiplication with : " << b << "  %%%%%%%%%%%%%%%%%%%%%%" << endl;
-    a *= b;
-    cout << a << endl;
-    a /= b;
-    cout << a << endl;
-    cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
+    BigInt test3(584763269859);
+
+
 
     cout << a << endl;
     cout << "%%%%%%%%%%%%%%%   Multiplication with : " << test3 << "  %%%%%%%%%%%%%%%%%%%%%%" << endl;
@@ -42,14 +23,14 @@ int main() {
     cout << a << endl;    a /= test3;
     cout << a << endl;
     cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
-
+//
     cout << "======== Same with BigInt de ouf ============" << endl;
     cout << c << endl;
     cout << "%%%%%%%%%%%%%%%   Multiplication with : " << g << "  %%%%%%%%%%%%%%%%%%%%%%" << endl;
     c *= g;
     cout << c << endl;
-//    c /= g;
-//    cout << c << endl;
+    c /= g;
+    cout << c << endl;
 
 //    if(d != a)
 //        cout << "Bizarre. Ce message ne devrait pas apparaitre\n";

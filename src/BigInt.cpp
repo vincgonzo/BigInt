@@ -106,10 +106,10 @@ BigInt &BigInt::operator+=(BigInt const &b)
     }
     if (sum) m_nbr.push_back(1);
 
-std::cout << "results mine " << *this << std::endl;
-std::cout << "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%" << std::endl;
+//std::cout << "results mine " << *this << std::endl;
+//std::cout << "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%" << std::endl;
 //std::cout << "results second " << c << std::endl;
-std::cout << "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%" << std::endl;
+//std::cout << "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%" << std::endl;
     return *this;
 //    return c;
 }
@@ -242,11 +242,11 @@ BigInt BigInt::operator*(BigInt const &b)
     BigInt c(0), tmp(0);
     int decal(0);
     for (it1 = b.m_nbr.begin(); it1 != b.m_nbr.end(); ++it1) {
-            std::cout << "Indivdually I have a this = " << *this << "; and iterator = ";
+//            std::cout << "Indivdually I have a this = " << *this << "; and iterator = ";
         tmp += *this * (*it1);
-        std::cout << "[tmp] evolved =>  " << tmp << std::endl;
+//        std::cout << "[tmp] evolved =>  " << tmp << std::endl;
         tmp.decale(decal++);
-        std::cout << "[tmp] decaled =>  " << tmp << std::endl;
+//        std::cout << "[tmp] decaled =>  " << tmp << std::endl;
         c += tmp;
     }
 
@@ -272,25 +272,50 @@ BigInt &BigInt::operator*=(int b)
     if (b < 0)
         sign = -sign, b = -b;
     long long report(0);
+    BigInt tmp(0);
 //        std::cout << "b = " << b << std::endl;
     for (int i = 0; i < (int) m_nbr.size(); ++i)
     {
-        std::cout << "value start :: " << m_nbr[i] << std::endl;
+//        std::cout << "value start :: " << m_nbr[i] << std::endl;
+        // TODO le report après premier passage est un base 1M et pas un chiffre simple à additionner, là est l'erreur !!!!!!!!!!
         long long calcul = m_nbr[i] * (long long) b + report;
-        std::cout << "calcul :: " << calcul << std::endl;
-        report = calcul / default_base;
-        std::cout << "report :: " << report << std::endl;
+//        std::cout << "calcul :: " << calcul << std::endl;
+        report = (calcul / default_base);
+        // TODO je dois implémenter mon modulo !!!
         m_nbr[i] = (int) (calcul % default_base);
-        std::cout << ":::                 value keeped :: " << m_nbr[i] << std::endl;
+//        std::cout << "/!\\  value keeped /!\\ " << m_nbr[i] << std::endl;
     }
-    if(report != 0)
-        m_nbr.push_back(report);
+    if(report != 0){
+        tmp += report;
+        tmp.decale(m_nbr.size());
+        *this += tmp;
+    }
+    //        m_nbr.push_back(report);
 
-    return *this;;
+    return *this;
+}
+
+//Moodulo
+BigInt BigInt::operator%(BigInt const &b)
+{
+    std::vector<int>::const_iterator it1;
+    BigInt c(0), tmp(0);
+    for (it1 = b.m_nbr.begin(); it1 != b.m_nbr.end(); ++it1)
+    {
+        BigInt tmp = *this % (*it1);
+        c += tmp;
+    }
+
+    return c;
+}
+
+BigInt BigInt::operator%(const int a)
+{
+    return *this % a;
 }
 
 
-//Multiplication
+//Division
 BigInt BigInt::operator/(BigInt const &b)
 {
     std::vector<int>::const_iterator it1;
@@ -323,13 +348,18 @@ BigInt &BigInt::operator/=(int b)
 {
     if (b < 0)
             sign = -sign, b = -b;
-    for (int i = (int) m_nbr.size() - 1, rem = 0; i >= 0; --i)
+    long long rem;
+    BigInt tmp;
+    for (int i = (int) m_nbr.size() - 1; i >= 0; --i)
     {
-        long long cur = m_nbr[i] + rem * (long long) default_base;
+//        std::cout << "m_nbr[i] : " << m_nbr[i] << " + report : " << rem << " * default_base " << default_base << " === " << m_nbr[i] + rem * default_base << std::endl;
+        long long cur = m_nbr[i] + rem * default_base ;
         m_nbr[i] = (int) (cur / b);
+        tmp += *this;
         rem = (int) (cur % b);
     }
-
+//    std::cout << "tmp  =====> " << tmp << std::endl;
+//    std::cout << "this =====> " << *this << std::endl;
     return *this;
 }
 
