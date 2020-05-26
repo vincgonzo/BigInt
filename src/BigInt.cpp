@@ -272,25 +272,32 @@ BigInt &BigInt::operator*=(int b)
     if (b < 0)
         sign = -sign, b = -b;
     long long report(0);
-    BigInt tmp(0);
+    BigInt tmp(0), lreport(0);
 //        std::cout << "b = " << b << std::endl;
     for (int i = 0; i < (int) m_nbr.size(); ++i)
     {
-//        std::cout << "value start :: " << m_nbr[i] << std::endl;
-        // TODO le report après premier passage est un base 1M et pas un chiffre simple à additionner, là est l'erreur !!!!!!!!!!
         long long calcul = m_nbr[i] * (long long) b + report;
-//        std::cout << "calcul :: " << calcul << std::endl;
+//        m_nbr[i] = (int) (calcul % default_base);
+        tmp += (calcul % default_base);
+//        long long calcul = m_nbr[i] * (long long) b + report;
+        std::cout << "result :: " << calcul << std::endl;
         report = (calcul / default_base);
         // TODO je dois implémenter mon modulo !!!
-        m_nbr[i] = (int) (calcul % default_base);
-//        std::cout << "/!\\  value keeped /!\\ " << m_nbr[i] << std::endl;
+//        m_nbr[i] = (int) (calcul % default_base);
+        std::cout << "/!\\  value keeped /!\\ " << m_nbr[i] << std::endl;
+        std::cout << "/!\\  Report /!\\ " << report << std::endl;
+        std::cout << "/!\\  TMP /!\\ " << tmp << std::endl;
     }
     if(report != 0){
-        tmp += report;
-        tmp.decale(m_nbr.size());
-        *this += tmp;
+//            std::cout << report << std::endl;
+//        lreport += report * default_base;
+//        lreport.decale(m_nbr.size());
+//            std::cout << "last Last report value :: " << lreport << std::endl;
+//        tmp += lreport;
+//            std::cout << "tmp LLL VALUE :: " << tmp << std::endl;
+//        *this += tmp;
     }
-    //        m_nbr.push_back(report);
+    *this = tmp;
 
     return *this;
 }
@@ -355,11 +362,9 @@ BigInt &BigInt::operator/=(int b)
 //        std::cout << "m_nbr[i] : " << m_nbr[i] << " + report : " << rem << " * default_base " << default_base << " === " << m_nbr[i] + rem * default_base << std::endl;
         long long cur = m_nbr[i] + rem * default_base ;
         m_nbr[i] = (int) (cur / b);
-        tmp += *this;
+
         rem = (int) (cur % b);
     }
-//    std::cout << "tmp  =====> " << tmp << std::endl;
-//    std::cout << "this =====> " << *this << std::endl;
     return *this;
 }
 

@@ -11,9 +11,9 @@ int main() {
     BigInt y("154547675874997658616423456789012345678901234567890123456789012345678901234567878");
 
 
-    BigInt a(45584754875);
+    BigInt a(48756324);
 
-    BigInt test3(584763269859);
+    BigInt test3(5876485632973);
 
 
 
@@ -23,14 +23,14 @@ int main() {
     cout << a << endl;    a /= test3;
     cout << a << endl;
     cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
-//
-    cout << "======== Same with BigInt de ouf ============" << endl;
-    cout << c << endl;
-    cout << "%%%%%%%%%%%%%%%   Multiplication with : " << g << "  %%%%%%%%%%%%%%%%%%%%%%" << endl;
-    c *= g;
-    cout << c << endl;
-    c /= g;
-    cout << c << endl;
+////
+//    cout << "======== Same with BigInt de ouf ============" << endl;
+//    cout << c << endl;
+//    cout << "%%%%%%%%%%%%%%%   Multiplication with : " << g << "  %%%%%%%%%%%%%%%%%%%%%%" << endl;
+//    c *= g;
+//    cout << c << endl;
+//    c /= g;
+//    cout << c << endl;
 
 //    if(d != a)
 //        cout << "Bizarre. Ce message ne devrait pas apparaitre\n";
