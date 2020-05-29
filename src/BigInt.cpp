@@ -277,27 +277,12 @@ BigInt &BigInt::operator*=(int b)
     for (int i = 0; i < (int) m_nbr.size(); ++i)
     {
         long long calcul = m_nbr[i] * (long long) b + report;
-//        m_nbr[i] = (int) (calcul % default_base);
-        tmp += (calcul % default_base);
-//        long long calcul = m_nbr[i] * (long long) b + report;
-        std::cout << "result :: " << calcul << std::endl;
         report = (calcul / default_base);
-        // TODO je dois implémenter mon modulo !!!
-//        m_nbr[i] = (int) (calcul % default_base);
-        std::cout << "/!\\  value keeped /!\\ " << m_nbr[i] << std::endl;
-        std::cout << "/!\\  Report /!\\ " << report << std::endl;
-        std::cout << "/!\\  TMP /!\\ " << tmp << std::endl;
+        m_nbr[i] = (int) (calcul % default_base);
     }
     if(report != 0){
-//            std::cout << report << std::endl;
-//        lreport += report * default_base;
-//        lreport.decale(m_nbr.size());
-//            std::cout << "last Last report value :: " << lreport << std::endl;
-//        tmp += lreport;
-//            std::cout << "tmp LLL VALUE :: " << tmp << std::endl;
-//        *this += tmp;
+            m_nbr.push_back(report);
     }
-    *this = tmp;
 
     return *this;
 }
@@ -355,15 +340,14 @@ BigInt &BigInt::operator/=(int b)
 {
     if (b < 0)
             sign = -sign, b = -b;
-    long long rem;
-    BigInt tmp;
+    long long report(0);
     for (int i = (int) m_nbr.size() - 1; i >= 0; --i)
     {
 //        std::cout << "m_nbr[i] : " << m_nbr[i] << " + report : " << rem << " * default_base " << default_base << " === " << m_nbr[i] + rem * default_base << std::endl;
-        long long cur = m_nbr[i] + rem * default_base ;
+        long long cur = m_nbr[i] + report * default_base ;
         m_nbr[i] = (int) (cur / b);
 
-        rem = (int) (cur % b);
+        report = (int) (cur % b);
     }
     return *this;
 }
